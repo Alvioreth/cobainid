@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Portal peserta COBAIN.ID untuk melihat profil, memilih paket Try Out, dan melakukan pendaftaran." />
+  <title>Portal Peserta | COBAIN.ID</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="peserta">
+  <header class="site-header">
+    <a class="brand brand-gradient" href="index.html" aria-label="COBAIN.ID">
+      <img src="assets/cobain-logo-crop.png" alt="Logo COBAIN.ID" />
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-label="Buka menu navigasi" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="main-nav" id="mainNav" aria-label="Navigasi peserta">
+      <a href="#profil">Profil</a>
+      <a href="#paket">Paket Try Out</a>
+      <a href="#daftar" class="nav-chip">Daftar</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero peserta-hero">
+      <div class="hero-bg" aria-hidden="true"></div>
+      <div class="container hero-stack reveal visible">
+        <span class="eyebrow">Portal Peserta COBAIN.ID</span>
+        <h1>Dashboard pendaftaran peserta COBAIN.ID.</h1>
+        <p>
+          Pilih paket Try Out, isi data diri, dan kirim pendaftaranmu dalam satu halaman. Tim COBAIN.ID akan menerima datamu untuk proses verifikasi dan tindak lanjut.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#paket">Lihat Paket</a>
+          <a class="btn btn-orange" href="#daftar">Daftar Sekarang</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section profile-section" id="profil">
+      <div class="container profile-grid">
+        <div class="section-heading left reveal">
+          <span class="eyebrow">Profil Perusahaan</span>
+          <h2>COBAIN.ID adalah ekosistem Try Out untuk pejuang PTN di seluruh Indonesia.</h2>
+        </div>
+        <div class="profile-card reveal">
+          <p>
+            COBAIN.ID adalah platform edukasi digital dan lembaga penyedia layanan Try Out terdepan yang berdedikasi untuk membantu pelajar dan pejuang PTN di seluruh Indonesia dalam menaklukkan berbagai ujian seleksi.
+          </p>
+          <p>
+            Sesuai dengan namanya, COBAIN.ID hadir untuk memfasilitasi peserta agar berani mencoba, berlatih, dan mengukur batas kemampuan mereka melalui simulasi ujian yang realistis, akurat, dan mutakhir.
+          </p>
+          <p>
+            Kami percaya bahwa persiapan yang matang adalah kunci keberhasilan. Oleh karena itu, COBAIN.ID merancang ekosistem belajar dan evaluasi yang tidak hanya berfokus pada hasil akhir, tetapi juga pada proses pemahaman konsep.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section packages-section" id="paket">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="eyebrow">Paket Try Out</span>
+          <h2>Pilih paket sesuai kebutuhan persiapanmu.</h2>
+          <p>Setiap paket didesain untuk membantu peserta mengukur kemampuan, membaca kelemahan konsep, dan menyusun strategi belajar.</p>
+        </div>
+
+        <div class="package-grid">
+          <article class="package-card reveal">
+            <div class="package-top">
+              <span class="package-badge">Basic</span>
+              <h3>Try Out SNBT Reguler</h3>
+              <p class="package-price">Rp25.000</p>
+            </div>
+            <ul>
+              <li>1 kali simulasi Try Out SNBT</li>
+              <li>Skor dan rekap hasil otomatis</li>
+              <li>Pembahasan ringkas per subtes</li>
+            </ul>
+            <button class="btn btn-primary full choose-program" data-program="Try Out SNBT Reguler" type="button">Pilih Paket</button>
+          </article>
+
+          <article class="package-card package-highlight reveal">
+            <div class="package-top">
+              <span class="package-badge">Favorit</span>
+              <h3>Intensif SNBT Premium</h3>
+              <p class="package-price">Rp75.000</p>
+            </div>
+            <ul>
+              <li>3 kali simulasi Try Out SNBT</li>
+              <li>Analisis performa dan kelemahan konsep</li>
+              <li>Pembahasan lengkap dan strategi waktu</li>
+            </ul>
+            <button class="btn btn-orange full choose-program" data-program="Intensif SNBT Premium" type="button">Pilih Paket</button>
+          </article>
+
+          <article class="package-card reveal">
+            <div class="package-top">
+              <span class="package-badge">Mandiri</span>
+              <h3>Ujian Mandiri / IUP</h3>
+              <p class="package-price">Rp90.000</p>
+            </div>
+            <ul>
+              <li>Latihan numerik dan penalaran lanjut</li>
+              <li>Simulasi soal mandiri PTN/IUP</li>
+              <li>Evaluasi target jurusan dan kampus</li>
+            </ul>
+            <button class="btn btn-primary full choose-program" data-program="Ujian Mandiri / IUP" type="button">Pilih Paket</button>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section registration-section" id="daftar">
+      <div class="container form-shell reveal">
+        <div class="form-copy">
+          <span class="eyebrow">Pendaftaran Peserta</span>
+          <h2>Isi data pendaftaranmu di sini.</h2>
+          <p>
+            Setelah dikirim, data akan diterima oleh tim COBAIN.ID untuk proses verifikasi, informasi jadwal, dan akses Try Out.
+          </p>
+          <div class="secure-note">
+            <strong>Privasi peserta:</strong> data pendaftaran hanya digunakan untuk kebutuhan administrasi Try Out COBAIN.ID.
+          </div>
+        </div>
+
+        <form class="student-form" id="studentForm" autocomplete="on">
+          <div class="form-row two">
+            <label>
+              Nama Lengkap
+              <input type="text" id="studentName" name="studentName" placeholder="Contoh: Aulia Rahman" required />
+            </label>
+            <label>
+              Email Aktif
+              <input type="email" id="studentEmail" name="studentEmail" placeholder="nama@email.com" required />
+            </label>
+          </div>
+
+          <div class="form-row two">
+            <label>
+              Nomor WhatsApp
+              <input type="tel" id="studentPhone" name="studentPhone" placeholder="08xxxxxxxxxx" required />
+            </label>
+            <label>
+              Asal Sekolah
+              <input type="text" id="studentSchool" name="studentSchool" placeholder="SMA/MA/SMK asal" required />
+            </label>
+          </div>
+
+          <div class="form-row two">
+            <label>
+              Kelas / Tahun Lulus
+              <select id="studentGrade" name="studentGrade" required>
+                <option value="">Pilih kelas</option>
+                <option>Kelas 12</option>
+                <option>Gap Year</option>
+                <option>Kelas 11</option>
+              </select>
+            </label>
+            <label>
+              Target PTN / Jurusan
+              <input type="text" id="studentCampus" name="studentCampus" placeholder="Contoh: ITS - Teknik Informatika" required />
+            </label>
+          </div>
+
+          <label>
+            Pilihan Paket
+            <select id="studentProgram" name="studentProgram" required>
+              <option value="">Pilih paket</option>
+              <option>Try Out SNBT Reguler</option>
+              <option>Intensif SNBT Premium</option>
+              <option>Ujian Mandiri / IUP</option>
+            </select>
+          </label>
+
+          <label>
+            Catatan Tambahan
+            <textarea id="studentNote" name="studentNote" rows="4" placeholder="Contoh: target PTN, jadwal preferensi, atau kendala belajar"></textarea>
+          </label>
+
+          <button class="btn btn-orange full" type="submit">Kirim Pendaftaran</button>
+          <p class="form-note">Setelah dikirim, tim COBAIN.ID akan menghubungi kamu melalui kontak yang terdaftar.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div>
+      <strong>COBAIN.ID</strong>
+      <span>Portal peserta untuk memilih paket dan mengirim pendaftaran.</span>
+    </div>
+    <a href="index.html">Kembali ke beranda</a>
+  </footer>
+
+  <div class="modal" id="successModal" aria-hidden="true" role="dialog" aria-labelledby="successTitle">
+    <div class="modal-panel">
+      <button class="modal-close" id="modalClose" type="button" aria-label="Tutup">×</button>
+      <span class="modal-icon">✓</span>
+      <h2 id="successTitle">Pendaftaran berhasil dikirim.</h2>
+      <p>Data peserta sudah masuk ke sistem host. Tim COBAIN.ID dapat menghubungimu melalui WhatsApp atau email aktif.</p>
+      <button class="btn btn-primary full" id="modalOk" type="button">Mengerti</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
