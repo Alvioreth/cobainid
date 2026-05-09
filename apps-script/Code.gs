@@ -1,7 +1,19 @@
+/* ============================================================
+   GOOGLE APPS SCRIPT UNTUK COBAIN.ID + UPLOAD BUKTI KE GOOGLE DRIVE
+   Cara pakai:
+   1. Buat Google Sheet baru.
+   2. Buka Extensions > Apps Script.
+   3. Paste seluruh kode ini.
+   4. Deploy > New deployment > Web app.
+   5. Execute as: Me.
+   6. Who has access: Anyone.
+   7. Copy Web App URL (/exec), lalu tempel ke config.js.
+   ============================================================ */
+
 const SHEET_NAME = 'Pendaftar';
 const HOST_CODE = 'COBAINHOST';
 const DRIVE_FOLDER_NAME = 'Bukti Pembayaran COBAIN.ID';
-const DRIVE_FOLDER_ID = 'https://drive.google.com/drive/folders/1AqPXd5PDKzD0EJEU98gJWVPTmF29q3KI?hl=ID';
+const DRIVE_FOLDER_ID = ''; // Opsional: isi dengan ID folder Google Drive kalau ingin memakai folder khusus.
 const SHARE_PROOF_FILE = true; // true = file Drive dapat dibuka lewat link oleh host dashboard.
 const HEADERS = [
   'id', 'createdAt', 'name', 'email', 'phone', 'school', 'grade', 'campus',
