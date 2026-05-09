@@ -10,7 +10,7 @@
 <body data-page="host">
   <header class="site-header">
     <a class="brand brand-gradient" href="index.html" aria-label="COBAIN.ID">
-      <img src="assets/cobain-logo.png" alt="Logo COBAIN.ID" />
+      <img src="assets/cobain-logo-crop.png" alt="Logo COBAIN.ID" />
     </a>
     <button class="nav-toggle" id="navToggle" aria-label="Buka menu navigasi" aria-expanded="false">
       <span></span><span></span><span></span>
@@ -44,6 +44,7 @@
             </label>
             <button class="btn btn-orange full" type="submit">Buka Dashboard</button>
           </form>
+          <small>Kode host default: <strong>COBAINHOST</strong>. Kode ini juga bisa diganti pada file <code>apps-script/Code.gs</code> dan <code>config.js</code>.</small>
         </section>
       </div>
     </section>
@@ -53,7 +54,7 @@
         <div class="section-heading left reveal">
           <span class="eyebrow">Rekap Pendaftaran</span>
           <h2>Dashboard data peserta.</h2>
-          <p>Semua pendaftaran dari portal peserta akan tampil di sini. Host dapat mencari data, mengekspor CSV, dan menghapus entri. Peserta tidak memiliki akses ke halaman ini.</p>
+          <p>Semua pendaftaran dari portal peserta akan tampil di sini, termasuk link bukti pembayaran yang tersimpan di Google Drive. Host dapat mencari data, mengekspor CSV, dan menghapus entri. Peserta tidak memiliki akses ke halaman ini.</p>
           <p id="syncStatus" class="sync-status info">Login host terlebih dahulu.</p>
         </div>
 
@@ -85,12 +86,13 @@
                 <th>Kelas</th>
                 <th>Target PTN/Jurusan</th>
                 <th>Paket</th>
+                <th>Bukti Pembayaran</th>
                 <th>Tanggal</th>
                 <th>Aksi</th>
               </tr>
             </thead>
             <tbody id="studentTableBody">
-              <tr><td colspan="10" class="empty-state">Login host terlebih dahulu.</td></tr>
+              <tr><td colspan="11" class="empty-state">Login host terlebih dahulu.</td></tr>
             </tbody>
           </table>
         </div>

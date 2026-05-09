@@ -50,6 +50,30 @@ function makeId() {
   return `COBAIN-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
+function readFileAsBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = String(reader.result || "");
+      resolve(result.includes(",") ? result.split(",").pop() : result);
+    };
+    reader.onerror = () => reject(new Error("Bukti pembayaran gagal dibaca. Coba upload ulang file."));
+    reader.readAsDataURL(file);
+  });
+}
+
+function validateProofFile(file) {
+  if (!file) throw new Error("Bukti pembayaran wajib diupload.");
+  const maxSizeMb = 5;
+  if (file.size > maxSizeMb * 1024 * 1024) {
+    throw new Error(`Ukuran bukti pembayaran maksimal ${maxSizeMb} MB.`);
+  }
+  const allowed = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
+  if (file.type && !allowed.includes(file.type)) {
+    throw new Error("Format bukti pembayaran harus JPG, PNG, WEBP, atau PDF.");
+  }
+}
+
 function normalizeStudent(student, index = 0) {
   return {
     id: student.id || `${Date.now()}-${index}`,
@@ -62,6 +86,9 @@ function normalizeStudent(student, index = 0) {
     campus: student.campus || "",
     program: student.program || "",
     note: student.note || "",
+    proofFileName: student.proofFileName || "",
+    proofFileUrl: student.proofFileUrl || "",
+    proofFileId: student.proofFileId || "",
   };
 }
 
@@ -151,6 +178,7 @@ function collectFormData() {
     campus: $("#studentCampus").value.trim(),
     program: $("#studentProgram").value,
     note: $("#studentNote").value.trim(),
+    proofFileName: $("#paymentProof")?.files?.[0]?.name || "",
   });
 }
 
@@ -174,17 +202,27 @@ async function submitRegistration(event) {
   const button = form.querySelector('button[type="submit"]');
   const originalText = button.textContent;
   const data = collectFormData();
+  const proofFile = $("#paymentProof")?.files?.[0] || null;
 
   try {
     button.disabled = true;
-    button.textContent = "Mengirim data...";
+    button.textContent = "Memeriksa bukti...";
+
+    validateProofFile(proofFile);
+    const proofBase64 = await readFileAsBase64(proofFile);
+    data.proofFileName = proofFile.name;
+    data.proofMimeType = proofFile.type || "application/octet-stream";
+    data.proofBase64 = proofBase64;
+
+    button.textContent = "Mengirim data dan bukti...";
 
     if (appsScriptReady()) {
       await postToAppsScript({ action: "create", ...data });
       showToast("Pendaftaran berhasil dikirim ke host.");
     } else {
       const students = readLocalStudents();
-      students.push(data);
+      const localData = { ...data, proofBase64: "", proofMimeType: proofFile.type || "", proofFileUrl: "Mode demo lokal - belum masuk Google Drive" };
+      students.push(localData);
       writeLocalStudents(students);
       showToast("Mode demo: data tersimpan lokal. Atur config.js agar masuk Google Sheets.");
     }
@@ -261,12 +299,14 @@ function renderRows(students) {
     student.campus,
     student.program,
     student.note,
+    student.proofFileName,
+    student.proofFileUrl,
   ].join(" ").toLowerCase().includes(query));
 
   updateStats(students);
 
   if (!filtered.length) {
-    tableBody.innerHTML = `<tr><td colspan="10" class="empty-state">${query ? "Data tidak ditemukan." : "Belum ada data peserta."}</td></tr>`;
+    tableBody.innerHTML = `<tr><td colspan="11" class="empty-state">${query ? "Data tidak ditemukan." : "Belum ada data peserta."}</td></tr>`;
     return;
   }
 
@@ -280,6 +320,7 @@ function renderRows(students) {
       <td>${sanitize(student.grade)}</td>
       <td>${sanitize(student.campus)}</td>
       <td>${sanitize(student.program)}</td>
+      <td>${student.proofFileUrl ? `<a class="table-link" href="${sanitize(student.proofFileUrl)}" target="_blank" rel="noopener noreferrer">Lihat Bukti</a><br><small>${sanitize(student.proofFileName)}</small>` : `<span class="muted">Belum ada</span>`}</td>
       <td>${formatDate(student.createdAt)}</td>
       <td><button class="action-btn" type="button" data-delete-id="${sanitize(student.id)}">Hapus</button></td>
     </tr>
@@ -295,7 +336,7 @@ async function getStudentsForHost(hostCode) {
 async function renderHostTable() {
   if (!isHostLoggedIn()) return;
   const tableBody = $("#studentTableBody");
-  if (tableBody) tableBody.innerHTML = `<tr><td colspan="10" class="empty-state">Memuat data peserta...</td></tr>`;
+  if (tableBody) tableBody.innerHTML = `<tr><td colspan="11" class="empty-state">Memuat data peserta...</td></tr>`;
 
   try {
     const students = await getStudentsForHost(getHostCode());
@@ -374,7 +415,7 @@ function exportCsv() {
     return;
   }
 
-  const headers = ["No", "Nama", "Email", "WhatsApp", "Sekolah", "Kelas", "Target PTN/Jurusan", "Paket", "Catatan", "Tanggal Daftar"];
+  const headers = ["No", "Nama", "Email", "WhatsApp", "Sekolah", "Kelas", "Target PTN/Jurusan", "Paket", "Bukti Pembayaran", "Catatan", "Tanggal Daftar"];
   const rows = students.map((student, index) => [
     index + 1,
     student.name,
@@ -384,6 +425,7 @@ function exportCsv() {
     student.grade,
     student.campus,
     student.program,
+    student.proofFileUrl,
     student.note,
     formatDate(student.createdAt),
   ]);
