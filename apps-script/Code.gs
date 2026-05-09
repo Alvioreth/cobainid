@@ -12,9 +12,11 @@
 
 const SHEET_NAME = 'Pendaftar';
 const HOST_CODE = 'COBAINHOST';
-const DRIVE_FOLDER_NAME = 'Bukti Pembayaran COBAIN.ID';
-const DRIVE_FOLDER_ID = ''; // Opsional: isi dengan ID folder Google Drive kalau ingin memakai folder khusus.
-const SHARE_PROOF_FILE = true; // true = file Drive dapat dibuka lewat link oleh host dashboard.
+const SHEET_NAME = 'Pendaftar';
+const HOST_CODE = 'COBAINHOST';
+const DRIVE_FOLDER_NAME = 'Bukti Pembayaran';
+const DRIVE_FOLDER_ID = '1AqPXd5PDKzDO5lEU98gJWpTmF2qq3KI'; // isi ID folder saja, bukan link lengkap
+const SHARE_PROOF_FILE = true;
 const HEADERS = [
   'id', 'createdAt', 'name', 'email', 'phone', 'school', 'grade', 'campus',
   'program', 'note', 'proofFileName', 'proofFileUrl', 'proofFileId'
