@@ -419,7 +419,7 @@ input:focus, select:focus, textarea:focus {
   z-index: -2;
   background:
     linear-gradient(90deg, rgba(247,251,255,0.97), rgba(247,251,255,0.78)),
-    url('assets/cobain-hero.png') center/cover no-repeat;
+    url('assets/bc.png') center/cover no-repeat;
 }
 .host-grid {
   display: grid;
