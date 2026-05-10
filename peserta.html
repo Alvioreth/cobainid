@@ -124,9 +124,8 @@
           <div class="secure-note">
             <strong>Privasi peserta:</strong> data pendaftaran hanya digunakan untuk kebutuhan administrasi Try Out COBAIN.ID
           </div>
-
           <div class="secure-note" id="narahubung">
-            <strong>Narahubung WhatsApp:</strong> segera diumumkan. Setelah pendaftaran berhasil, peserta juga akan diarahkan ke grup WhatsApp resmi COBAIN.ID.
+            <strong>Narahubung WhatsApp:</strong> segera diumumkan. Setelah pendaftaran berhasil, peserta akan diarahkan ke grup WhatsApp resmi COBAIN.ID.
           </div>
         </div>
 
@@ -179,11 +178,16 @@
             </select>
           </label>
 
+          <label>
+            Bukti Pembayaran
+            <input type="file" id="paymentProof" name="paymentProof" accept="image/*,.pdf" required />
+            <small class="input-help">Upload bukti transfer dalam format JPG, PNG, WEBP, atau PDF. Maksimal 3 MB agar data aman terkirim ke Google Drive.</small>
+          </label>
 
           <label>
-            Bukti Pembayaran / Transfer
-            <input type="file" id="paymentProof" name="paymentProof" accept="image/*,application/pdf" required />
-            <small class="form-note">Upload bukti pembayaran dalam format JPG, PNG, WEBP, atau PDF. Ukuran maksimal 5 MB.</small>
+            Bukti Follow dan Share
+            <input type="file" id="followShareProof" name="followShareProof" accept="image/*,.pdf" required />
+            <small class="input-help">Upload screenshot bukti follow dan share dalam format JPG, PNG, WEBP, atau PDF. Maksimal 3 MB.</small>
           </label>
 
           <label>
@@ -211,8 +215,8 @@
       <button class="modal-close" id="modalClose" type="button" aria-label="Tutup">×</button>
       <span class="modal-icon">✓</span>
       <h2 id="successTitle">Pendaftaran berhasil dikirim.</h2>
-      <p>Data peserta dan bukti pembayaran sudah masuk ke sistem host. Silakan masuk ke grup WhatsApp resmi peserta COBAIN.ID untuk mendapatkan informasi lanjutan.</p>
-      <a class="btn btn-primary full" href="https://chat.whatsapp.com/Dd8WnoPkleXHHYXqxMT5Wx" target="_blank" rel="noopener noreferrer" style="background: linear-gradient(135deg, #25D366, #128C7E); margin-bottom: 12px;">Masuk Grup WhatsApp Peserta</a>
+      <p>Data peserta sudah masuk ke sistem host. Bukti pembayaran serta bukti follow dan share juga tersimpan di Google Drive admin. Tim COBAIN.ID dapat menghubungimu melalui WhatsApp atau email aktif.</p>
+      <a class="btn btn-wa full" id="joinWaGroup" href="https://chat.whatsapp.com/Dd8WnoPkleXHHYXqxMT5Wx" target="_blank" rel="noopener">Masuk Grup WhatsApp Peserta</a>
       <button class="btn btn-primary full" id="modalOk" type="button">Mengerti</button>
     </div>
   </div>

@@ -50,30 +50,6 @@ function makeId() {
   return `COBAIN-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
-function readFileAsBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = String(reader.result || "");
-      resolve(result.includes(",") ? result.split(",").pop() : result);
-    };
-    reader.onerror = () => reject(new Error("Bukti pembayaran gagal dibaca. Coba upload ulang file."));
-    reader.readAsDataURL(file);
-  });
-}
-
-function validateProofFile(file) {
-  if (!file) throw new Error("Bukti pembayaran wajib diupload.");
-  const maxSizeMb = 5;
-  if (file.size > maxSizeMb * 1024 * 1024) {
-    throw new Error(`Ukuran bukti pembayaran maksimal ${maxSizeMb} MB.`);
-  }
-  const allowed = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
-  if (file.type && !allowed.includes(file.type)) {
-    throw new Error("Format bukti pembayaran harus JPG, PNG, WEBP, atau PDF.");
-  }
-}
-
 function normalizeStudent(student, index = 0) {
   return {
     id: student.id || `${Date.now()}-${index}`,
@@ -86,9 +62,12 @@ function normalizeStudent(student, index = 0) {
     campus: student.campus || "",
     program: student.program || "",
     note: student.note || "",
-    proofFileName: student.proofFileName || "",
-    proofFileUrl: student.proofFileUrl || "",
-    proofFileId: student.proofFileId || "",
+    paymentProofName: student.paymentProofName || student.proofFileName || "",
+    paymentProofUrl: student.paymentProofUrl || student.proofFileUrl || "",
+    paymentProofFileId: student.paymentProofFileId || student.proofFileId || "",
+    followShareProofName: student.followShareProofName || "",
+    followShareProofUrl: student.followShareProofUrl || "",
+    followShareProofFileId: student.followShareProofFileId || "",
   };
 }
 
@@ -166,8 +145,45 @@ function getStudentsJsonp(hostCode) {
   });
 }
 
-function collectFormData() {
-  return normalizeStudent({
+function fileToDataUrl(file, label = "file") {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ""));
+    reader.onerror = () => reject(new Error(`${label} gagal dibaca. Coba pilih file lain.`));
+    reader.readAsDataURL(file);
+  });
+}
+
+function validateProofFile(file, label) {
+  if (!file) {
+    throw new Error(`${label} wajib diupload.`);
+  }
+
+  const maxSize = 3 * 1024 * 1024;
+  if (file.size > maxSize) {
+    throw new Error(`Ukuran ${label.toLowerCase()} maksimal 3 MB. Kompres file dulu, lalu upload ulang.`);
+  }
+
+  const allowedTypes = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
+  if (file.type && !allowedTypes.includes(file.type)) {
+    throw new Error(`Format ${label.toLowerCase()} harus JPG, PNG, WEBP, atau PDF.`);
+  }
+}
+
+async function collectFormData() {
+  const proofInput = $("#paymentProof");
+  const followInput = $("#followShareProof");
+  const proofFile = proofInput?.files?.[0] || null;
+  const followFile = followInput?.files?.[0] || null;
+
+  validateProofFile(proofFile, "Bukti pembayaran");
+  validateProofFile(followFile, "Bukti follow dan share");
+
+  const proofDataUrl = await fileToDataUrl(proofFile, "Bukti pembayaran");
+  const followDataUrl = await fileToDataUrl(followFile, "Bukti follow dan share");
+
+  return {
+    ...normalizeStudent({
     id: makeId(),
     createdAt: new Date().toISOString(),
     name: $("#studentName").value.trim(),
@@ -178,8 +194,14 @@ function collectFormData() {
     campus: $("#studentCampus").value.trim(),
     program: $("#studentProgram").value,
     note: $("#studentNote").value.trim(),
-    proofFileName: $("#paymentProof")?.files?.[0]?.name || "",
-  });
+    paymentProofName: proofFile.name || "bukti-pembayaran",
+    followShareProofName: followFile.name || "bukti-follow-share",
+  }),
+    paymentProofBase64: proofDataUrl,
+    paymentProofType: proofFile.type || "application/octet-stream",
+    followShareProofBase64: followDataUrl,
+    followShareProofType: followFile.type || "application/octet-stream",
+  };
 }
 
 function openSuccessModal() {
@@ -201,28 +223,21 @@ async function submitRegistration(event) {
   const form = event.currentTarget;
   const button = form.querySelector('button[type="submit"]');
   const originalText = button.textContent;
-  const data = collectFormData();
-  const proofFile = $("#paymentProof")?.files?.[0] || null;
+  let data;
 
   try {
     button.disabled = true;
-    button.textContent = "Memeriksa bukti...";
+    button.textContent = "Membaca bukti pembayaran dan follow/share...";
+    data = await collectFormData();
 
-    validateProofFile(proofFile);
-    const proofBase64 = await readFileAsBase64(proofFile);
-    data.proofFileName = proofFile.name;
-    data.proofMimeType = proofFile.type || "application/octet-stream";
-    data.proofBase64 = proofBase64;
-
-    button.textContent = "Mengirim data dan bukti...";
+    button.textContent = "Mengirim data...";
 
     if (appsScriptReady()) {
       await postToAppsScript({ action: "create", ...data });
       showToast("Pendaftaran berhasil dikirim ke host.");
     } else {
       const students = readLocalStudents();
-      const localData = { ...data, proofBase64: "", proofMimeType: proofFile.type || "", proofFileUrl: "Mode demo lokal - belum masuk Google Drive" };
-      students.push(localData);
+      students.push(data);
       writeLocalStudents(students);
       showToast("Mode demo: data tersimpan lokal. Atur config.js agar masuk Google Sheets.");
     }
@@ -299,14 +314,16 @@ function renderRows(students) {
     student.campus,
     student.program,
     student.note,
-    student.proofFileName,
-    student.proofFileUrl,
+    student.paymentProofName,
+    student.paymentProofUrl,
+    student.followShareProofName,
+    student.followShareProofUrl,
   ].join(" ").toLowerCase().includes(query));
 
   updateStats(students);
 
   if (!filtered.length) {
-    tableBody.innerHTML = `<tr><td colspan="11" class="empty-state">${query ? "Data tidak ditemukan." : "Belum ada data peserta."}</td></tr>`;
+    tableBody.innerHTML = `<tr><td colspan="12" class="empty-state">${query ? "Data tidak ditemukan." : "Belum ada data peserta."}</td></tr>`;
     return;
   }
 
@@ -320,7 +337,8 @@ function renderRows(students) {
       <td>${sanitize(student.grade)}</td>
       <td>${sanitize(student.campus)}</td>
       <td>${sanitize(student.program)}</td>
-      <td>${student.proofFileUrl ? `<a class="table-link" href="${sanitize(student.proofFileUrl)}" target="_blank" rel="noopener noreferrer">Lihat Bukti</a><br><small>${sanitize(student.proofFileName)}</small>` : `<span class="muted">Belum ada</span>`}</td>
+      <td>${student.paymentProofUrl ? `<a href="${sanitize(student.paymentProofUrl)}" target="_blank" rel="noopener">Bukti bayar</a>` : "-"}</td>
+      <td>${student.followShareProofUrl ? `<a href="${sanitize(student.followShareProofUrl)}" target="_blank" rel="noopener">Bukti follow/share</a>` : "-"}</td>
       <td>${formatDate(student.createdAt)}</td>
       <td><button class="action-btn" type="button" data-delete-id="${sanitize(student.id)}">Hapus</button></td>
     </tr>
@@ -336,7 +354,7 @@ async function getStudentsForHost(hostCode) {
 async function renderHostTable() {
   if (!isHostLoggedIn()) return;
   const tableBody = $("#studentTableBody");
-  if (tableBody) tableBody.innerHTML = `<tr><td colspan="11" class="empty-state">Memuat data peserta...</td></tr>`;
+  if (tableBody) tableBody.innerHTML = `<tr><td colspan="12" class="empty-state">Memuat data peserta...</td></tr>`;
 
   try {
     const students = await getStudentsForHost(getHostCode());
@@ -415,7 +433,7 @@ function exportCsv() {
     return;
   }
 
-  const headers = ["No", "Nama", "Email", "WhatsApp", "Sekolah", "Kelas", "Target PTN/Jurusan", "Paket", "Bukti Pembayaran", "Catatan", "Tanggal Daftar"];
+  const headers = ["No", "Nama", "Email", "WhatsApp", "Sekolah", "Kelas", "Target PTN/Jurusan", "Paket", "Catatan", "Nama Bukti Pembayaran", "Link Bukti Pembayaran", "Nama Bukti Follow & Share", "Link Bukti Follow & Share", "Tanggal Daftar"];
   const rows = students.map((student, index) => [
     index + 1,
     student.name,
@@ -425,8 +443,11 @@ function exportCsv() {
     student.grade,
     student.campus,
     student.program,
-    student.proofFileUrl,
     student.note,
+    student.paymentProofName,
+    student.paymentProofUrl,
+    student.followShareProofName,
+    student.followShareProofUrl,
     formatDate(student.createdAt),
   ]);
 
