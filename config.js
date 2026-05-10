@@ -5,6 +5,6 @@
    3) Tempel URL Web App di APPS_SCRIPT_URL di bawah ini
    ===================================================== */
 window.COBAIN_CONFIG = {
-  APPS_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbybLnS7dv3rccs1N8GFznyiqbKpXjvx1RQcwITqEBfWFICuko70FLukmrf9R9rJh1dhkQ/exec",
+  APPS_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbx9qeCahHHMhSlZsyxLVIsSGA9Xj98a4KswHL-9gpWtYz35FLkWUkP_Jmj7fAwUVuQIjA/exec",
   HOST_CODE: "COBAINHOST"
 };
