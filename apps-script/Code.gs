@@ -1,25 +1,39 @@
 /* ============================================================
-   GOOGLE APPS SCRIPT UNTUK COBAIN.ID + UPLOAD BUKTI KE GOOGLE DRIVE
-   Cara pakai:
+   GOOGLE APPS SCRIPT UNTUK COBAIN.ID
+
+   Fungsi:
+   - Menerima data pendaftaran peserta dari GitHub Pages.
+   - Menyimpan data ke Google Sheets.
+   - Menyimpan bukti pembayaran ke Google Drive.
+   - Menyimpan bukti follow dan share ke Google Drive.
+   - Menyediakan data untuk dashboard host.
+
+   Cara pakai singkat:
    1. Buat Google Sheet baru.
    2. Buka Extensions > Apps Script.
-   3. Paste seluruh kode ini.
-   4. Deploy > New deployment > Web app.
-   5. Execute as: Me.
-   6. Who has access: Anyone.
-   7. Copy Web App URL (/exec), lalu tempel ke config.js.
+   3. Hapus kode bawaan, lalu paste seluruh kode ini.
+   4. Kalau ingin memakai folder Drive khusus, isi DRIVE_FOLDER_ID dengan ID folder saja.
+      Contoh link folder:
+      https://drive.google.com/drive/folders/ABC123xyz
+      Maka yang ditempel hanya: ABC123xyz
+   5. Klik Deploy > New deployment > Web app.
+   6. Execute as: Me.
+   7. Who has access: Anyone.
+   8. Copy Web App URL (/exec), lalu tempel ke file config.js.
    ============================================================ */
 
 const SHEET_NAME = 'Pendaftar';
 const HOST_CODE = 'COBAINHOST';
-const SHEET_NAME = 'Pendaftar';
-const HOST_CODE = 'COBAINHOST';
-const DRIVE_FOLDER_NAME = 'Bukti Pembayaran';
-const DRIVE_FOLDER_ID = '1AqPXd5PDKzDO5lEU98gJWpTmF2qq3KI'; // isi ID folder saja, bukan link lengkap
-const SHARE_PROOF_FILE = true;
+
+const DRIVE_FOLDER_NAME = 'Bukti Pendaftaran COBAIN.ID';
+const DRIVE_FOLDER_ID = ''; // Optional. Isi ID folder Drive saja, bukan link lengkap. Contoh: '1AqPXd5PDKzDO5lEU98gJWpTmF2qq3KI'
+const SHARE_PROOF_FILE = true; // true agar link bukti bisa dibuka host/admin.
+
 const HEADERS = [
   'id', 'createdAt', 'name', 'email', 'phone', 'school', 'grade', 'campus',
-  'program', 'note', 'proofFileName', 'proofFileUrl', 'proofFileId'
+  'program', 'note',
+  'paymentProofName', 'paymentProofUrl', 'paymentProofFileId',
+  'followShareProofName', 'followShareProofUrl', 'followShareProofFileId'
 ];
 
 function getSheet_() {
@@ -34,44 +48,6 @@ function getSheet_() {
     sheet.setFrozenRows(1);
   }
   return sheet;
-}
-
-function getProofFolder_() {
-  if (DRIVE_FOLDER_ID) return DriveApp.getFolderById(DRIVE_FOLDER_ID);
-  const folders = DriveApp.getFoldersByName(DRIVE_FOLDER_NAME);
-  return folders.hasNext() ? folders.next() : DriveApp.createFolder(DRIVE_FOLDER_NAME);
-}
-
-function sanitizeFileName_(value) {
-  return String(value || 'bukti-pembayaran')
-    .replace(/[\\/:*?"<>|#%{}~&]/g, '-')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .slice(0, 120);
-}
-
-function uploadProofToDrive_(params) {
-  const base64 = params.proofBase64 || '';
-  if (!base64) return { proofFileName: '', proofFileUrl: '', proofFileId: '' };
-
-  const folder = getProofFolder_();
-  const safeName = sanitizeFileName_(params.name || 'peserta');
-  const originalName = sanitizeFileName_(params.proofFileName || 'bukti-pembayaran');
-  const mimeType = params.proofMimeType || 'application/octet-stream';
-  const timestamp = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyyMMdd-HHmmss');
-  const fileName = `${timestamp} - ${safeName} - ${originalName}`;
-  const blob = Utilities.newBlob(Utilities.base64Decode(base64), mimeType, fileName);
-  const file = folder.createFile(blob);
-
-  if (SHARE_PROOF_FILE) {
-    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-  }
-
-  return {
-    proofFileName: fileName,
-    proofFileUrl: file.getUrl(),
-    proofFileId: file.getId()
-  };
 }
 
 function jsonOutput_(payload, callback) {
@@ -99,11 +75,68 @@ function listStudents_() {
   return rows.map(rowToObject_).filter(item => item.id);
 }
 
+function getOrCreateProofFolder_() {
+  if (String(DRIVE_FOLDER_ID || '').trim()) {
+    return DriveApp.getFolderById(String(DRIVE_FOLDER_ID).trim());
+  }
+
+  const folders = DriveApp.getFoldersByName(DRIVE_FOLDER_NAME);
+  return folders.hasNext() ? folders.next() : DriveApp.createFolder(DRIVE_FOLDER_NAME);
+}
+
+function saveProofFile_(params, id, options) {
+  const dataUrl = params[options.base64Field] || '';
+  if (!dataUrl) {
+    return {
+      name: params[options.nameField] || '',
+      url: '',
+      fileId: ''
+    };
+  }
+
+  const match = String(dataUrl).match(/^data:([^;]+);base64,(.+)$/);
+  const mimeType = params[options.typeField] || (match ? match[1] : 'application/octet-stream');
+  const base64Data = match ? match[2] : String(dataUrl);
+  const originalName = params[options.nameField] || options.defaultName || 'bukti';
+  const safeName = String(originalName).replace(/[^a-zA-Z0-9._-]/g, '-');
+  const fileName = `${id}-${options.prefix}-${safeName}`;
+
+  const bytes = Utilities.base64Decode(base64Data);
+  const blob = Utilities.newBlob(bytes, mimeType, fileName);
+  const folder = getOrCreateProofFolder_();
+  const file = folder.createFile(blob);
+
+  if (SHARE_PROOF_FILE) {
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  }
+
+  return {
+    name: originalName,
+    url: file.getUrl(),
+    fileId: file.getId()
+  };
+}
+
 function appendStudent_(params) {
   const sheet = getSheet_();
   const id = params.id || Utilities.getUuid();
   const createdAt = params.createdAt || new Date().toISOString();
-  const proof = uploadProofToDrive_(params);
+
+  const paymentProof = saveProofFile_(params, id, {
+    base64Field: 'paymentProofBase64',
+    nameField: 'paymentProofName',
+    typeField: 'paymentProofType',
+    prefix: 'bukti-pembayaran',
+    defaultName: 'bukti-pembayaran'
+  });
+
+  const followShareProof = saveProofFile_(params, id, {
+    base64Field: 'followShareProofBase64',
+    nameField: 'followShareProofName',
+    typeField: 'followShareProofType',
+    prefix: 'bukti-follow-share',
+    defaultName: 'bukti-follow-share'
+  });
 
   const row = [
     id,
@@ -116,10 +149,14 @@ function appendStudent_(params) {
     params.campus || '',
     params.program || '',
     params.note || '',
-    proof.proofFileName || params.proofFileName || '',
-    proof.proofFileUrl || '',
-    proof.proofFileId || ''
+    paymentProof.name || '',
+    paymentProof.url || '',
+    paymentProof.fileId || '',
+    followShareProof.name || '',
+    followShareProof.url || '',
+    followShareProof.fileId || ''
   ];
+
   sheet.appendRow(row);
   return rowToObject_(row);
 }
@@ -134,7 +171,6 @@ function deleteStudent_(id) {
   const index = ids.findIndex(value => String(value) === String(id));
   if (index === -1) return false;
 
-  // File bukti di Drive tidak otomatis dihapus agar arsip pembayaran tetap aman.
   sheet.deleteRow(index + 2);
   return true;
 }
