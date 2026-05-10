@@ -179,7 +179,7 @@ button { cursor: pointer; }
   z-index: -2;
   background:
     linear-gradient(90deg, rgba(247,251,255,0.97) 0%, rgba(247,251,255,0.86) 42%, rgba(247,251,255,0.98) 100%),
-    url('assets/bg.png') center/cover no-repeat;
+    url('assets/bc.png') center/cover no-repeat;
   opacity: 0.78;
 }
 .hero-bg::after {
