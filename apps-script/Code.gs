@@ -1,5 +1,5 @@
 /* ============================================================
-   GOOGLE APPS SCRIPT UNTUK COBAIN.ID
+   GOOGLE APPS SCRIPT UNTUK COBAIN.ID — FIXED VERSION
 
    Fungsi:
    - Menerima data pendaftaran peserta dari GitHub Pages.
@@ -8,26 +8,18 @@
    - Menyimpan bukti follow dan share ke Google Drive.
    - Menyediakan data untuk dashboard host.
 
-   Cara pakai singkat:
-   1. Buat Google Sheet baru.
-   2. Buka Extensions > Apps Script.
-   3. Hapus kode bawaan, lalu paste seluruh kode ini.
-   4. Kalau ingin memakai folder Drive khusus, isi DRIVE_FOLDER_ID dengan ID folder saja.
-      Contoh link folder:
-      https://drive.google.com/drive/folders/ABC123xyz
-      Maka yang ditempel hanya: ABC123xyz
-   5. Klik Deploy > New deployment > Web app.
-   6. Execute as: Me.
-   7. Who has access: Anyone.
-   8. Copy Web App URL (/exec), lalu tempel ke file config.js.
+   PENTING:
+   - File ini ditempel di Google Sheets > Extensions > Apps Script.
+   - Jangan ditempel di GitHub sebagai script.js.
+   - Setelah edit, wajib Deploy > Manage deployments > Edit > New version > Deploy.
    ============================================================ */
 
 const SHEET_NAME = 'Pendaftar';
 const HOST_CODE = 'COBAINHOST';
 
 const DRIVE_FOLDER_NAME = 'Bukti Pendaftaran COBAIN.ID';
-const DRIVE_FOLDER_ID = '1AqPXd5PDKzDO5lEU98gJWpTmF2qq3KI'; // Optional. Isi ID folder Drive saja, bukan link lengkap. Contoh: '1AqPXd5PDKzDO5lEU98gJWpTmF2qq3KI'
-const SHARE_PROOF_FILE = true; // true agar link bukti bisa dibuka host/admin.
+const DRIVE_FOLDER_ID = '1LMGA9lUUcXFjJj0LIDwwUYSQ83ASGPKx'; // ID folder Drive saja, bukan link lengkap.
+const SHARE_PROOF_FILE = true;
 
 const HEADERS = [
   'id', 'createdAt', 'name', 'email', 'phone', 'school', 'grade', 'campus',
@@ -38,15 +30,19 @@ const HEADERS = [
 
 function getSheet_() {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  if (!spreadsheet) throw new Error('Spreadsheet tidak ditemukan. Pastikan script ini dibuat dari Google Sheets: Extensions > Apps Script.');
+
   let sheet = spreadsheet.getSheetByName(SHEET_NAME);
   if (!sheet) sheet = spreadsheet.insertSheet(SHEET_NAME);
 
   const firstRow = sheet.getRange(1, 1, 1, HEADERS.length).getValues()[0];
   const headerMissing = HEADERS.some((header, index) => firstRow[index] !== header);
+
   if (headerMissing) {
     sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
     sheet.setFrozenRows(1);
   }
+
   return sheet;
 }
 
@@ -71,13 +67,16 @@ function listStudents_() {
   const sheet = getSheet_();
   const lastRow = sheet.getLastRow();
   if (lastRow < 2) return [];
+
   const rows = sheet.getRange(2, 1, lastRow - 1, HEADERS.length).getValues();
   return rows.map(rowToObject_).filter(item => item.id);
 }
 
 function getOrCreateProofFolder_() {
-  if (String(DRIVE_FOLDER_ID || '').trim()) {
-    return DriveApp.getFolderById(String(DRIVE_FOLDER_ID).trim());
+  const folderId = String(DRIVE_FOLDER_ID || '').trim();
+
+  if (folderId) {
+    return DriveApp.getFolderById(folderId);
   }
 
   const folders = DriveApp.getFoldersByName(DRIVE_FOLDER_NAME);
@@ -86,6 +85,7 @@ function getOrCreateProofFolder_() {
 
 function saveProofFile_(params, id, options) {
   const dataUrl = params[options.base64Field] || '';
+
   if (!dataUrl) {
     return {
       name: params[options.nameField] || '',
@@ -118,51 +118,59 @@ function saveProofFile_(params, id, options) {
 }
 
 function appendStudent_(params) {
-  const sheet = getSheet_();
-  const id = params.id || Utilities.getUuid();
-  const createdAt = params.createdAt || new Date().toISOString();
+  const lock = LockService.getScriptLock();
+  lock.waitLock(15000);
 
-  const paymentProof = saveProofFile_(params, id, {
-    base64Field: 'paymentProofBase64',
-    nameField: 'paymentProofName',
-    typeField: 'paymentProofType',
-    prefix: 'bukti-pembayaran',
-    defaultName: 'bukti-pembayaran'
-  });
+  try {
+    const sheet = getSheet_();
+    const id = params.id || Utilities.getUuid();
+    const createdAt = params.createdAt || new Date().toISOString();
 
-  const followShareProof = saveProofFile_(params, id, {
-    base64Field: 'followShareProofBase64',
-    nameField: 'followShareProofName',
-    typeField: 'followShareProofType',
-    prefix: 'bukti-follow-share',
-    defaultName: 'bukti-follow-share'
-  });
+    const paymentProof = saveProofFile_(params, id, {
+      base64Field: 'paymentProofBase64',
+      nameField: 'paymentProofName',
+      typeField: 'paymentProofType',
+      prefix: 'bukti-pembayaran',
+      defaultName: 'bukti-pembayaran'
+    });
 
-  const row = [
-    id,
-    createdAt,
-    params.name || '',
-    params.email || '',
-    params.phone || '',
-    params.school || '',
-    params.grade || '',
-    params.campus || '',
-    params.program || '',
-    params.note || '',
-    paymentProof.name || '',
-    paymentProof.url || '',
-    paymentProof.fileId || '',
-    followShareProof.name || '',
-    followShareProof.url || '',
-    followShareProof.fileId || ''
-  ];
+    const followShareProof = saveProofFile_(params, id, {
+      base64Field: 'followShareProofBase64',
+      nameField: 'followShareProofName',
+      typeField: 'followShareProofType',
+      prefix: 'bukti-follow-share',
+      defaultName: 'bukti-follow-share'
+    });
 
-  sheet.appendRow(row);
-  return rowToObject_(row);
+    const row = [
+      id,
+      createdAt,
+      params.name || '',
+      params.email || '',
+      params.phone || '',
+      params.school || '',
+      params.grade || '',
+      params.campus || '',
+      params.program || '',
+      params.note || '',
+      paymentProof.name || '',
+      paymentProof.url || '',
+      paymentProof.fileId || '',
+      followShareProof.name || '',
+      followShareProof.url || '',
+      followShareProof.fileId || ''
+    ];
+
+    sheet.appendRow(row);
+    return rowToObject_(row);
+  } finally {
+    lock.releaseLock();
+  }
 }
 
 function deleteStudent_(id) {
   if (!id) return false;
+
   const sheet = getSheet_();
   const lastRow = sheet.getLastRow();
   if (lastRow < 2) return false;
@@ -183,16 +191,24 @@ function clearStudents_() {
 }
 
 function doGet(e) {
-  const params = e.parameter || {};
+  const params = (e && e.parameter) ? e.parameter : {};
   const callback = params.callback || '';
+  const action = params.action || 'list';
+  const hostCode = String(params.hostCode || '').trim();
 
   try {
-    if ((params.action || 'list') === 'list') {
-      if (params.hostCode !== HOST_CODE) {
+    if (action === 'ping') {
+      return jsonOutput_({ ok: true, message: 'COBAIN.ID Apps Script aktif.' }, callback);
+    }
+
+    if (action === 'list') {
+      if (hostCode !== HOST_CODE) {
         return jsonOutput_({ ok: false, error: 'Kode host salah.' }, callback);
       }
+
       return jsonOutput_({ ok: true, students: listStudents_() }, callback);
     }
+
     return jsonOutput_({ ok: false, error: 'Action GET tidak dikenali.' }, callback);
   } catch (error) {
     return jsonOutput_({ ok: false, error: error.message }, callback);
@@ -200,8 +216,9 @@ function doGet(e) {
 }
 
 function doPost(e) {
-  const params = e.parameter || {};
+  const params = (e && e.parameter) ? e.parameter : {};
   const action = params.action || 'create';
+  const hostCode = String(params.hostCode || '').trim();
 
   try {
     if (action === 'create') {
@@ -209,7 +226,7 @@ function doPost(e) {
       return jsonOutput_({ ok: true, student });
     }
 
-    if (params.hostCode !== HOST_CODE) {
+    if (hostCode !== HOST_CODE) {
       return jsonOutput_({ ok: false, error: 'Kode host salah.' });
     }
 

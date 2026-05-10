@@ -1,10 +1,8 @@
 /* =====================================================
    KONFIGURASI COBAIN.ID
-   1) Buat Google Sheet + Apps Script memakai file apps-script/Code.gs
-   2) Deploy Apps Script sebagai Web App
-   3) Tempel URL Web App di APPS_SCRIPT_URL di bawah ini
+   APPS_SCRIPT_URL harus memakai Web App URL yang berakhiran /exec.
    ===================================================== */
 window.COBAIN_CONFIG = {
-  APPS_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbx9qeCahHHMhSlZsyxLVIsSGA9Xj98a4KswHL-9gpWtYz35FLkWUkP_Jmj7fAwUVuQIjA/exec",
+  APPS_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbxBYz6Rj6hObsW5Mc-S9NKUbXbIw9xuwpATRy7tbfF9sWyVmk3WF4g7UAo6yIJPVpATVA/exec",
   HOST_CODE: "COBAINHOST"
 };
