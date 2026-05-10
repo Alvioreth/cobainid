@@ -12,7 +12,11 @@ const page = document.body?.dataset.page || "home";
 const toast = $("#toast");
 
 function appsScriptReady() {
-  return Boolean(APPS_SCRIPT_URL && !APPS_SCRIPT_URL.includes("https://script.google.com/macros/s/AKfycbx9qeCahHHMhSlZsyxLVIsSGA9Xj98a4KswHL-9gpWtYz35FLkWUkP_Jmj7fAwUVuQIjA/exec"));
+  return Boolean(
+    APPS_SCRIPT_URL &&
+    APPS_SCRIPT_URL.startsWith("https://script.google.com/macros/s/") &&
+    APPS_SCRIPT_URL.endsWith("/exec")
+  );
 }
 
 function showToast(message) {
