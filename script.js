@@ -12,7 +12,7 @@ const page = document.body?.dataset.page || "home";
 const toast = $("#toast");
 
 function appsScriptReady() {
-  return Boolean(APPS_SCRIPT_URL && !APPS_SCRIPT_URL.includes("https://script.google.com/macros/s/AKfycbz2Af0L8156Unajud-4yYXbpfFVBm7fgt10pDxUiGwL3UIz2HOoY13hco9nzQeXuE7dsA/exec"));
+  return Boolean(APPS_SCRIPT_URL && !APPS_SCRIPT_URL.includes("https://script.google.com/macros/s/AKfycbx9qeCahHHMhSlZsyxLVIsSGA9Xj98a4KswHL-9gpWtYz35FLkWUkP_Jmj7fAwUVuQIjA/exec"));
 }
 
 function showToast(message) {
