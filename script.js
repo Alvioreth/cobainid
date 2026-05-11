@@ -72,6 +72,9 @@ function normalizeStudent(student, index = 0) {
     followShareProofName: student.followShareProofName || "",
     followShareProofUrl: student.followShareProofUrl || "",
     followShareProofFileId: student.followShareProofFileId || "",
+    groupShareProofName: student.groupShareProofName || "",
+    groupShareProofUrl: student.groupShareProofUrl || "",
+    groupShareProofFileId: student.groupShareProofFileId || "",
   };
 }
 
@@ -177,37 +180,44 @@ function validateProofFile(file, label) {
 async function collectFormData() {
   const proofInput = $("#paymentProof");
   const followInput = $("#followShareProof");
+  const groupInput = $("#groupShareProof");
+
   const proofFile = proofInput?.files?.[0] || null;
   const followFile = followInput?.files?.[0] || null;
+  const groupFile = groupInput?.files?.[0] || null;
 
   validateProofFile(proofFile, "Bukti pembayaran");
-  validateProofFile(followFile, "Bukti follow dan share");
+  validateProofFile(followFile, "Bukti like dan komentar");
+  validateProofFile(groupFile, "Bukti share ke 3 grup WA/LINE");
 
   const proofDataUrl = await fileToDataUrl(proofFile, "Bukti pembayaran");
-  const followDataUrl = await fileToDataUrl(followFile, "Bukti follow dan share");
+  const followDataUrl = await fileToDataUrl(followFile, "Bukti like dan komentar");
+  const groupDataUrl = await fileToDataUrl(groupFile, "Bukti share ke 3 grup WA/LINE");
 
   return {
     ...normalizeStudent({
-    id: makeId(),
-    createdAt: new Date().toISOString(),
-    name: $("#studentName").value.trim(),
-    email: $("#studentEmail").value.trim().toLowerCase(),
-    phone: $("#studentPhone").value.trim(),
-    school: $("#studentSchool").value.trim(),
-    grade: $("#studentGrade").value,
-    campus: $("#studentCampus").value.trim(),
-    program: $("#studentProgram").value,
-    note: $("#studentNote").value.trim(),
-    paymentProofName: proofFile.name || "bukti-pembayaran",
-    followShareProofName: followFile.name || "bukti-follow-share",
-  }),
+      id: makeId(),
+      createdAt: new Date().toISOString(),
+      name: $("#studentName").value.trim(),
+      email: $("#studentEmail").value.trim().toLowerCase(),
+      phone: $("#studentPhone").value.trim(),
+      school: $("#studentSchool").value.trim(),
+      grade: $("#studentGrade").value,
+      campus: $("#studentCampus").value.trim(),
+      program: $("#studentProgram").value,
+      note: $("#studentNote").value.trim(),
+      paymentProofName: proofFile.name || "bukti-pembayaran",
+      followShareProofName: followFile.name || "bukti-like-komentar",
+      groupShareProofName: groupFile.name || "bukti-share-grup-wa-line",
+    }),
     paymentProofBase64: proofDataUrl,
     paymentProofType: proofFile.type || "application/octet-stream",
     followShareProofBase64: followDataUrl,
     followShareProofType: followFile.type || "application/octet-stream",
+    groupShareProofBase64: groupDataUrl,
+    groupShareProofType: groupFile.type || "application/octet-stream",
   };
 }
-
 function openSuccessModal() {
   const modal = $("#successModal");
   if (!modal) return;
@@ -310,43 +320,46 @@ function renderRows(students) {
   if (!tableBody) return;
 
   const filtered = students.filter((student) => [
-    student.name,
-    student.email,
-    student.phone,
-    student.school,
-    student.grade,
-    student.campus,
-    student.program,
-    student.note,
-    student.paymentProofName,
-    student.paymentProofUrl,
-    student.followShareProofName,
-    student.followShareProofUrl,
-  ].join(" ").toLowerCase().includes(query));
+  student.name,
+  student.email,
+  student.phone,
+  student.school,
+  student.grade,
+  student.campus,
+  student.program,
+  student.note,
+  student.paymentProofName,
+  student.paymentProofUrl,
+  student.followShareProofName,
+  student.followShareProofUrl,
+  student.groupShareProofName,
+  student.groupShareProofUrl,
+].join(" ").toLowerCase().includes(query));
 
   updateStats(students);
 
   if (!filtered.length) {
-    tableBody.innerHTML = `<tr><td colspan="12" class="empty-state">${query ? "Data tidak ditemukan." : "Belum ada data peserta."}</td></tr>`;
+    tableBody.innerHTML = `<tr><td colspan="13" class="empty-state">${query ? "Data tidak ditemukan." : "Belum ada data peserta."}</td></tr>`;
     return;
   }
 
-  tableBody.innerHTML = filtered.map((student, index) => `
-    <tr>
-      <td>${index + 1}</td>
-      <td><strong>${sanitize(student.name)}</strong>${student.note ? `<br><small>${sanitize(student.note)}</small>` : ""}</td>
-      <td>${sanitize(student.email)}</td>
-      <td>${sanitize(student.phone)}</td>
-      <td>${sanitize(student.school)}</td>
-      <td>${sanitize(student.grade)}</td>
-      <td>${sanitize(student.campus)}</td>
-      <td>${sanitize(student.program)}</td>
-      <td>${student.paymentProofUrl ? `<a href="${sanitize(student.paymentProofUrl)}" target="_blank" rel="noopener">Bukti bayar</a>` : "-"}</td>
-      <td>${student.followShareProofUrl ? `<a href="${sanitize(student.followShareProofUrl)}" target="_blank" rel="noopener">Bukti follow/share</a>` : "-"}</td>
-      <td>${formatDate(student.createdAt)}</td>
-      <td><button class="action-btn" type="button" data-delete-id="${sanitize(student.id)}">Hapus</button></td>
-    </tr>
-  `).join("");
+ tableBody.innerHTML = filtered.map((student, index) => `
+  <tr>
+    <td>${index + 1}</td>
+    <td><strong>${sanitize(student.name)}</strong>${student.note ? `<br><small>${sanitize(student.note)}</small>` : ""}</td>
+    <td>${sanitize(student.email)}</td>
+    <td>${sanitize(student.phone)}</td>
+    <td>${sanitize(student.school)}</td>
+    <td>${sanitize(student.grade)}</td>
+    <td>${sanitize(student.campus)}</td>
+    <td>${sanitize(student.program)}</td>
+    <td>${student.paymentProofUrl ? `<a href="${sanitize(student.paymentProofUrl)}" target="_blank" rel="noopener">Bukti bayar</a>` : "-"}</td>
+    <td>${student.followShareProofUrl ? `<a href="${sanitize(student.followShareProofUrl)}" target="_blank" rel="noopener">Bukti like/komentar</a>` : "-"}</td>
+    <td>${student.groupShareProofUrl ? `<a href="${sanitize(student.groupShareProofUrl)}" target="_blank" rel="noopener">Bukti share grup</a>` : "-"}</td>
+    <td>${formatDate(student.createdAt)}</td>
+    <td><button class="action-btn" type="button" data-delete-id="${sanitize(student.id)}">Hapus</button></td>
+  </tr>
+`).join("");
 }
 
 async function getStudentsForHost(hostCode) {
@@ -358,7 +371,7 @@ async function getStudentsForHost(hostCode) {
 async function renderHostTable() {
   if (!isHostLoggedIn()) return;
   const tableBody = $("#studentTableBody");
-  if (tableBody) tableBody.innerHTML = `<tr><td colspan="12" class="empty-state">Memuat data peserta...</td></tr>`;
+  if (tableBody) tableBody.innerHTML = `<tr><td colspan="13" class="empty-state">Memuat data peserta...</td></tr>`;
 
   try {
     const students = await getStudentsForHost(getHostCode());
@@ -437,7 +450,7 @@ function exportCsv() {
     return;
   }
 
-  const headers = ["No", "Nama", "Email", "WhatsApp", "Sekolah", "Kelas", "Target PTN/Jurusan", "Paket", "Catatan", "Nama Bukti Pembayaran", "Link Bukti Pembayaran", "Nama Bukti Follow & Share", "Link Bukti Follow & Share", "Tanggal Daftar"];
+  const headers = ["No", "Nama", "Email", "WhatsApp", "Sekolah", "Kelas", "Target PTN/Jurusan", "Paket", "Catatan", "Nama Bukti Pembayaran", "Link Bukti Pembayaran", "Nama Bukti Like/Komentar", "Link Bukti Like/Komentar", "Nama Bukti Share Grup", "Link Bukti Share Grup", "Tanggal Daftar"];
   const rows = students.map((student, index) => [
     index + 1,
     student.name,
@@ -452,6 +465,8 @@ function exportCsv() {
     student.paymentProofUrl,
     student.followShareProofName,
     student.followShareProofUrl,
+    student.groupShareProofName,
+    student.groupShareProofUrl,
     formatDate(student.createdAt),
   ]);
 
