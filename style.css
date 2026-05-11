@@ -798,4 +798,29 @@ code {
     grid-template-columns: 1fr;
   }
 }
+.label-with-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
 
+.external-link-icon {
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid currentColor;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+  text-decoration: none;
+  color: inherit;
+  transition: 0.2s ease;
+}
+
+.external-link-icon:hover {
+  transform: translateY(-1px);
+  color: #ff7a00;
+}
