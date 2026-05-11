@@ -12,7 +12,7 @@
    ============================================================ */
 
 const SHEET_NAME = 'Pendaftar';
-const HOST_CODE = 'COBAINHOST';
+const HOST_CODE = 'COBAINAJAYGY';
 
 const DRIVE_FOLDER_NAME = 'Bukti Pendaftaran COBAIN.ID';
 const DRIVE_FOLDER_ID = '1LMGA9lUUcXFjJj0LIDwwUYSQ83ASGPKx';
