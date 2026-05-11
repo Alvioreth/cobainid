@@ -691,4 +691,111 @@ code {
 .admin-contact span {
   margin-top: 2px;
 }
+/* ===== FIX TAMPILAN FORM PENDAFTARAN ===== */
+
+.registration-section {
+  padding: 80px 24px;
+}
+
+.registration-section .form-shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 34px;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(10, 57, 112, 0.12);
+  box-shadow: 0 24px 70px rgba(6, 31, 69, 0.10);
+  display: grid;
+  grid-template-columns: 0.75fr 1.25fr;
+  gap: 34px;
+  align-items: start;
+}
+
+.student-form {
+  width: 100%;
+}
+
+.form-row.two {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.student-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-weight: 700;
+  color: #062a5f;
+}
+
+.student-form input,
+.student-form select,
+.student-form textarea {
+  width: 100%;
+  min-height: 48px;
+  border-radius: 14px;
+  border: 1px solid rgba(10, 57, 112, 0.18);
+  background: #f8fbff;
+  padding: 13px 16px;
+  font: inherit;
+  color: #062a5f;
+}
+
+.student-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.student-form input[type="file"] {
+  padding: 11px 14px;
+  background: #f8fbff;
+}
+
+.student-form input[type="file"]::file-selector-button {
+  border: none;
+  border-radius: 10px;
+  background: #0b4ea2;
+  color: white;
+  padding: 9px 14px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-right: 12px;
+}
+
+.student-form small,
+.student-form .upload-note {
+  color: #4f6385;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.admin-contact strong,
+.admin-contact a,
+.admin-contact span {
+  display: block;
+}
+
+.admin-contact a {
+  margin-top: 6px;
+  color: inherit;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.admin-contact span {
+  margin-top: 2px;
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .registration-section .form-shell {
+    grid-template-columns: 1fr;
+    padding: 24px;
+  }
+
+  .form-row.two {
+    grid-template-columns: 1fr;
+  }
+}
 
