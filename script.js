@@ -267,11 +267,39 @@ async function submitRegistration(event) {
 }
 
 function chooseProgram(event) {
-  const program = event.currentTarget.dataset.program;
-  const select = $("#studentProgram");
-  if (select) select.value = program;
-  $("#daftar")?.scrollIntoView({ behavior: "smooth", block: "start" });
-  showToast(`Paket dipilih: ${program}`);
+  const button = event.currentTarget;
+  const program = button.dataset.program || "Cobain Cup";
+  const nominal = button.dataset.nominal || "Rp 5.000";
+  const registrationUrl = button.dataset.registrationUrl || "https://app.e-ujian.com/cobainId/pendaftaran/106";
+  const modal = $("#qrisModal");
+
+  const programEl = $("#qrisProgram");
+  const nominalEl = $("#qrisNominal");
+  const linkEl = $("#qrisLink");
+
+  if (programEl) programEl.textContent = program;
+  if (nominalEl) nominalEl.textContent = `Scan sebesar ${nominal}.`;
+  if (linkEl) linkEl.href = registrationUrl;
+
+  if (!modal) {
+    window.open(registrationUrl, "_blank", "noopener");
+    return;
+  }
+
+  modal.classList.add("show");
+  modal.setAttribute("aria-hidden", "false");
+  showToast(`QRIS ${program} dibuka.`);
+}
+
+function closeQrisModal() {
+  const modal = $("#qrisModal");
+  if (!modal) return;
+  modal.classList.remove("show");
+  modal.setAttribute("aria-hidden", "true");
+}
+
+function showComingSoon() {
+  showToast("Paket ini sedang disiapkan. Pantau update COBAIN.ID, ya.");
 }
 
 function setHostLoggedIn(value, hostCode = "") {
@@ -561,12 +589,15 @@ function setupPage() {
   setupRevealAnimation();
 
   if (page === "peserta") {
-    $("#studentForm")?.addEventListener("submit", submitRegistration);
     $$(".choose-program").forEach((button) => button.addEventListener("click", chooseProgram));
-    $("#modalClose")?.addEventListener("click", closeSuccessModal);
-    $("#modalOk")?.addEventListener("click", closeSuccessModal);
-    $("#successModal")?.addEventListener("click", (event) => {
-      if (event.target.id === "successModal") closeSuccessModal();
+    $$(".coming-soon").forEach((button) => button.addEventListener("click", showComingSoon));
+    $("#qrisModalClose")?.addEventListener("click", closeQrisModal);
+    $("#qrisModalOk")?.addEventListener("click", closeQrisModal);
+    $("#qrisModal")?.addEventListener("click", (event) => {
+      if (event.target.id === "qrisModal") closeQrisModal();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeQrisModal();
     });
   }
 

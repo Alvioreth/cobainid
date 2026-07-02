@@ -87,3 +87,10 @@ Pastikan keduanya sama.
 ## Catatan Keamanan
 
 Versi ini cocok untuk tahap awal dan kebutuhan gratis. Karena website statis bersifat terbuka, proteksi host berbasis kode ini belum setara sistem login profesional. Untuk lembaga yang sudah besar, gunakan backend/database dengan autentikasi sungguhan.
+
+
+## Update peserta Cobain Cup
+- Halaman `peserta.html` sudah diubah tanpa form input manual.
+- Paket aktif: Cobain Cup. Dua paket lainnya Coming Soon.
+- Tombol daftar membuka popup QRIS, lalu tombol lanjut ke link pendaftaran resmi.
+- Asset QRIS dan maskot COBAIN.ID sudah masuk folder `assets/`.

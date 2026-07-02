@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Portal peserta COBAIN.ID untuk melihat profil, memilih paket Try Out, dan melakukan pendaftaran." />
+  <meta name="description" content="Portal peserta COBAIN.ID untuk memilih Cobain Cup dan melakukan pendaftaran resmi." />
   <title>Portal Peserta | COBAIN.ID</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -17,250 +17,184 @@
     </button>
     <nav class="main-nav" id="mainNav" aria-label="Navigasi peserta">
       <a href="#profil">Profil</a>
-      <a href="#paket">Paket Try Out</a>
-      <a href="#narahubung">Narahubung</a>
-      <a href="#daftar" class="nav-chip">Daftar</a>
+      <a href="#paket">Cobain Cup</a>
+      <a href="#alur">Alur Daftar</a>
+      <a href="#narahubung" class="nav-chip">Admin</a>
     </nav>
   </header>
 
   <main>
-    <section class="hero peserta-hero">
+    <section class="hero peserta-hero peserta-hero-fresh">
       <div class="hero-bg" aria-hidden="true"></div>
-      <div class="container hero-stack reveal visible">
-        <span class="eyebrow">Portal Peserta COBAIN.ID</span>
-        <h1>Dashboard pendaftaran peserta COBAIN.ID</h1>
-        <p>
-          Pilih paket Try Out, isi data diri, dan kirim pendaftaranmu dalam satu halaman. Tim COBAIN.ID akan menerima datamu untuk proses verifikasi dan tindak lanjut.
-        </p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="#paket">Lihat Paket</a>
-          <a class="btn btn-orange" href="#daftar">Daftar Sekarang</a>
+      <div class="container peserta-hero-grid reveal visible">
+        <div class="hero-copy peserta-copy">
+          <span class="eyebrow">Portal Peserta COBAIN.ID</span>
+          <h1>COBAIN.ID siap bantu kamu latihan lebih fokus.</h1>
+          <p>
+            Pilih paket, scan QRIS sesuai nominal pembayaran, lalu lanjutkan pendaftaran melalui link resmi COBAIN.ID.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#paket">Lihat Paket</a>
+            <a class="btn btn-orange" href="#alur">Cara Daftar</a>
+          </div>
+          <div class="hero-mini-note">
+            <span>CBT Try Out</span>
+            <span>QRIS Payment</span>
+            <span>Link Resmi</span>
+          </div>
+        </div>
+        <div class="mascot-stage" aria-label="Maskot kucing COBAIN.ID">
+          <div class="mascot-card mascot-card-main">
+            <img src="assets/mascot-main.png" alt="Maskot kucing COBAIN.ID memberi semangat" />
+          </div>
+          <div class="floating-bubble bubble-score" aria-label="Target">🎯</div>
+          <div class="floating-bubble bubble-tryout" aria-label="Tryout">📝</div>
+          <div class="floating-bubble bubble-focus" aria-label="Semangat">🚀</div>
         </div>
       </div>
     </section>
 
     <section class="section profile-section" id="profil">
-      <div class="container profile-grid">
+      <div class="container profile-grid profile-grid-fresh">
         <div class="section-heading left reveal">
           <span class="eyebrow">Profil Perusahaan</span>
-          <h2>COBAIN.ID adalah platform Try Out untuk pejuang PTN di seluruh Indonesia</h2>
+          <h2>COBAIN.ID adalah platform Try Out untuk pejuang PTN di seluruh Indonesia.</h2>
         </div>
         <div class="profile-card reveal">
           <p>
-            COBAIN.ID adalah platform edukasi digital dan lembaga penyedia layanan Try Out terdepan yang berdedikasi untuk membantu pelajar dan pejuang PTN di seluruh Indonesia dalam menaklukkan berbagai ujian seleksi.
+            COBAIN.ID menghadirkan ekosistem latihan berbasis simulasi ujian, pembiasaan ritme CBT, dan evaluasi hasil agar peserta dapat membaca kemampuan akademiknya secara lebih terukur.
           </p>
           <p>
-            Sesuai dengan namanya, COBAIN.ID hadir untuk memfasilitasi peserta agar berani mencoba, berlatih, dan mengukur batas kemampuan mereka melalui simulasi ujian yang realistis, akurat, dan mutakhir.
+            Cobain Cup dibuat sebagai ruang latihan kompetitif yang tetap ramah untuk peserta. Fokusnya bukan hanya mengerjakan soal, tetapi juga mengenali pola kelemahan, menjaga konsistensi, dan membangun strategi waktu.
           </p>
-          <p>
-            Kami percaya bahwa persiapan yang matang adalah kunci keberhasilan. Oleh karena itu, COBAIN.ID merancang ekosistem belajar dan evaluasi yang tidak hanya berfokus pada hasil akhir, tetapi juga pada proses pemahaman konsep.
-          </p>
+          <div class="profile-mascot-row">
+            <img src="assets/mascot-laptop.png" alt="Maskot COBAIN.ID menggunakan laptop" />
+            <div>
+              <strong>Daftarkan dirimu sekarang juga ya mimin tunggu😁</strong>
+              <span>Yuk pilih paket, scan QRIS, lalu lanjut ke pendaftaran resmi COBAIN.ID.</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="section packages-section" id="paket">
+    <section class="section packages-section packages-fresh" id="paket">
       <div class="container">
         <div class="section-heading reveal">
-          <span class="eyebrow">Paket Try Out</span>
-          <h2>Pilih paket sesuai kebutuhan persiapanmu</h2>
+          <span class="eyebrow">Paket</span>
+          <h2>Pilih paket yang tersedia</h2>
+          <p>Pilih paket, buka QRIS pembayaran, lalu lanjutkan ke halaman pendaftaran resmi.</p>
         </div>
 
         <div class="package-grid">
-          <article class="package-card reveal">
+          <article class="package-card package-highlight package-active reveal">
+            <div class="package-mascot mascot-corner">
+              <img src="assets/mascot-main.png" alt="Maskot COBAIN.ID" />
+            </div>
             <div class="package-top">
-              <span class="package-badge">Basic</span>
-              <h3>Cobain Gratis 2026</h3>
-              <p class="package-price">FREE</p>
+              <span class="package-badge">Aktif</span>
+              <h3>Cobain Cup</h3>
+              <p class="package-price">Rp 5.000</p>
+            </div>
+            <div class="package-mascot-row" aria-label="Elemen interaktif maskot Cobain">
+              <button class="mascot-chip" type="button" tabindex="-1" aria-hidden="true"><img src="assets/mascot-main.png" alt="" /></button>
+              <button class="mascot-chip" type="button" tabindex="-1" aria-hidden="true"><img src="assets/mascot-laptop.png" alt="" /></button>
+              <button class="mascot-chip" type="button" tabindex="-1" aria-hidden="true"><img src="assets/mascot-pencil.png" alt="" /></button>
             </div>
             <ul>
-              <li>1 kali simulasi Try Out SNBT</li>
-              <li>Skor dan rekap hasil otomatis</li>
-              <li>Pengerjaan berbasis CBT</li>
+              <li>Paket TryOut</li>
+              <li>Pembahasan Try Out</li>
+              <li>Scoring Try Out</li>
             </ul>
-            <button class="btn btn-primary full choose-program" data-program="Cobain Gratis 2026"type="button">Pilih Paket</button>
+            <button
+              class="btn btn-orange full choose-program"
+              data-program="Cobain Cup"
+              data-nominal="Rp 5.000"
+              data-registration-url="https://app.e-ujian.com/cobainId/pendaftaran/106"
+              type="button">
+              Daftar Paket
+            </button>
           </article>
 
-          <article class="package-card package-highlight reveal">
+          <article class="package-card package-soon reveal">
+            <div class="package-mascot mascot-corner mascot-soft">
+              <img src="assets/mascot-laptop.png" alt="Maskot COBAIN.ID" />
+            </div>
             <div class="package-top">
-              <span class="package-badge">Favorit</span>
-              <h3>Cooming Soon</h3>
-              <p class="package-price">Cooming Soon</p>
+              <span class="package-badge">Segera</span>
+              <h3>Coming Soon</h3>
+              <p class="package-price">Segera hadir</p>
+            </div>
+            <div class="package-emoji-row" aria-hidden="true">
+              <span>✨</span><span>🐾</span><span>📚</span>
             </div>
             <ul>
-              <li>5 kali simulasi Try Out SNBT</li>
-              <li>Analisis performa dan kelemahan konsep</li>
-              <li>Pembahasan lengkap dan strategi waktu</li>
+              <li>Paket tambahan sedang disiapkan</li>
+              <li>Informasi jadwal akan diumumkan</li>
+              <li>Tetap pantau update COBAIN.ID</li>
             </ul>
-            <button class="btn btn-orange full choose-program" data-program="" type="button">Pilih Paket</button>
+            <button class="btn btn-disabled full coming-soon" type="button" aria-disabled="true">Coming Soon</button>
           </article>
 
-          <article class="package-card reveal">
+          <article class="package-card package-soon reveal">
+            <div class="package-mascot mascot-corner mascot-soft">
+              <img src="assets/mascot-pencil.png" alt="Maskot COBAIN.ID" />
+            </div>
             <div class="package-top">
-              <span class="package-badge">Mandiri</span>
-              <h3>Cooming Soon</h3>
-              <p class="package-price">Cooming Soon</p>
+              <span class="package-badge">Segera</span>
+              <h3>Coming Soon</h3>
+              <p class="package-price">Segera hadir</p>
+            </div>
+            <div class="package-emoji-row" aria-hidden="true">
+              <span>🎉</span><span>🐱</span><span>🚀</span>
             </div>
             <ul>
-              <li>3 kali Simulasi</li>
-              <li>Soal-Soal up to date</li>
-              <li>Pembahasan Lengkap</li>
+              <li>Paket lanjutan sedang dikembangkan</li>
+              <li>Detail benefit akan ditambahkan</li>
+              <li>Cocok untuk program berikutnya</li>
             </ul>
-            <button class="btn btn-primary full choose-program" data-program="" type="button">Pilih Paket</button>
+            <button class="btn btn-disabled full coming-soon" type="button" aria-disabled="true">Coming Soon</button>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="section registration-section" id="daftar">
-      <div class="container form-shell reveal">
-        <div class="form-copy">
-          <span class="eyebrow">Pendaftaran Peserta</span>
-          <h2>Isi data pendaftaranmu di sini.</h2>
-          <p>
-            Setelah dikirim, data akan diterima oleh tim COBAIN.ID untuk proses verifikasi, informasi jadwal, dan akses Try Out
-          </p>
-          <div class="secure-note">
-            <strong>Privasi peserta:</strong> data pendaftaran hanya digunakan untuk kebutuhan administrasi Try Out COBAIN.ID
+    <section class="section steps-section" id="alur">
+      <div class="container steps-shell reveal">
+        <div class="section-heading left">
+          <span class="eyebrow">Alur Pendaftaran</span>
+          <h2>Daftar lebih ringkas lewat alur yang sederhana.</h2>
+          <p>Gunakan tombol pada paket yang dipilih untuk membuka QRIS. Setelah pembayaran, lanjutkan ke sistem pendaftaran resmi.</p>
+        </div>
+        <div class="steps-grid">
+          <div class="step-card">
+            <span>01</span>
+            <strong>Pilih Paket</strong>
+            <p>Klik tombol daftar pada paket yang tersedia.</p>
           </div>
-          <div class="secure-note admin-contact" id="narahubung">
-             <strong>Kontak Admin:</strong>
-              <a href="https://wa.me/6287869523167" target="_blank" rel="noopener">
-              +62 878-6952-3167
-              </a>
-              <span>(Admin)</span>
+          <div class="step-card">
+            <span>02</span>
+            <strong>Scan QRIS</strong>
+            <p>Bayar sebesar nominal paket menggunakan aplikasi berlogo QRIS.</p>
+          </div>
+          <div class="step-card">
+            <span>03</span>
+            <strong>Lanjut Pendaftaran</strong>
+            <p>Klik tombol pada popup QRIS untuk masuk ke halaman pendaftaran resmi.</p>
           </div>
         </div>
-        <form class="student-form" id="studentForm" autocomplete="on">
-          <div class="form-row two">
-            <label>
-              Nama Lengkap
-              <input type="text" id="studentName" name="studentName" placeholder="Contoh: Aulia Rahman" required />
-            </label>
-            <label>
-              Email Aktif
-              <input type="email" id="studentEmail" name="studentEmail" placeholder="nama@email.com" required />
-            </label>
-          </div>
+      </div>
+    </section>
 
-          <div class="form-row two">
-            <label>
-              Nomor WhatsApp
-              <input type="tel" id="studentPhone" name="studentPhone" placeholder="08xxxxxxxxxx" required />
-            </label>
-            <label>
-              Asal Sekolah
-              <input type="text" id="studentSchool" name="studentSchool" placeholder="SMA/MA/SMK asal" required />
-            </label>
-          </div>
-
-          <div class="form-row two">
-            <label>
-              Kelas / Tahun Lulus
-              <select id="studentGrade" name="studentGrade" required>
-                <option value="">Pilih kelas</option>
-                <option>Kelas 12</option>
-                <option>Gap Year</option>
-                <option>Kelas 11</option>
-              </select>
-            </label>
-            <label>
-              Target PTN / Jurusan
-              <input type="text" id="studentCampus" name="studentCampus" placeholder="Contoh: ITS - Teknik Informatika" required />
-            </label>
-          </div>
-
-          <label>
-            Pilihan Paket
-            <select id="studentProgram" name="studentProgram" required>
-              <option value="">Pilih paket</option>
-              <option>Cobain Gratis 2026</option>
-              <option></option>
-              <option></option>
-            </select>
-          </label>
-
-          <label>
-            <span class="label-with-link">
-              Bukti Follow dan Repost Postingan
-               <a 
-                href="https://www.instagram.com/p/DYNC1wBEqG4/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                class="external-link-icon"
-                title="Buka postingan Instagram"
-                aria-label="Buka postingan Instagram"
-                >
-                  ↗
-                </a>
-              </span>
-
-          <input type="file" id="paymentProof" name="paymentProof" accept="image/*,.pdf" required />
-
-  <small class="input-help">
-    Upload bukti dalam format JPG, PNG, WEBP, atau PDF Maksimal 3 MB
-  </small>
-</label>
-
-         <label>
-            <span class="label-with-link">
-              Bukti Like dan Komentar
-            <a 
-             href="https://www.instagram.com/p/DYNC1wBEqG4/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" 
-             target="_blank" 
-             rel="noopener noreferrer"
-             class="external-link-icon"
-             title="Buka postingan Instagram"
-              aria-label="Buka postingan Instagram"
-            >
-              ↗
-            </a>
-          </span>
-
-  <input type="file" id="followShareProof" name="followShareProof" accept="image/*,.pdf" required />
-
-  <small class="input-help">
-    Upload screenshot bukti like dan komentar dalam format JPG, PNG, WEBP, atau PDF. Maksimal 3 MB.
-  </small>
-</label>
-<label>
-  <span class="label-with-link">
-    Bukti Share Postingan ke 3 kontak/2 Grup Grup WA/LINE
-    <a 
-      href="https://intip.in/BERKASSHARE" 
-      target="_blank" 
-      rel="noopener noreferrer"
-      class="external-link-icon"
-      title="Buka postingan Instagram"
-      aria-label="Buka postingan Instagram"
-    >
-      ↗
-    </a>
-  </span>
-
-  <input type="file" id="groupShareProof" name="groupShareProof" accept="image/*,.pdf" required />
-
-  <small class="input-help">
-    Upload screenshot bukti share postingan ke 3 grup WhatsApp atau LINE dalam format JPG, PNG, WEBP, atau PDF. Maksimal 3 MB.
-  </small>
-</label>
-
-      <label>
-          Mendapatkan info dari mana?
-      <select id="studentNote" name="studentNote" required>
-      <option value="">Pilih sumber informasi</option>
-      <option>Instagram - COBAIN.ID</option>
-      <option>WhatsApp</option>
-      <option>Teman</option>
-      <option>Telegram</option>
-      <option>TikTok</option>
-      <option>Media Partner Instagram</option>
-      </select>
-    </label>
-
-          <button class="btn btn-orange full" type="submit">Kirim Pendaftaran</button>
-          <p class="form-note">Setelah dikirim, tim COBAIN.ID akan menghubungi kamu melalui kontak yang terdaftar.</p>
-        </form>
+    <section class="section contact-strip" id="narahubung">
+      <div class="container contact-shell reveal">
+        <img src="assets/mascot-pencil.png" alt="Maskot COBAIN.ID memegang pensil" />
+        <div>
+          <span class="eyebrow">Narahubung</span>
+          <h2>Butuh bantuan pendaftaran?</h2>
+          <p>Hubungi admin COBAIN.ID untuk pertanyaan pembayaran, akses peserta, atau kendala link pendaftaran.</p>
+        </div>
+        <a class="btn btn-primary" href="https://wa.me/6287869523167" target="_blank" rel="noopener">Chat Admin</a>
       </div>
     </section>
   </main>
@@ -268,19 +202,25 @@
   <footer class="site-footer">
     <div>
       <strong>COBAIN.ID</strong>
-      <span>Portal peserta untuk memilih paket dan mengirim pendaftaran.</span>
+      <span>Portal peserta Cobain Cup dan pendaftaran resmi.</span>
     </div>
     <a href="index.html">Kembali ke beranda</a>
   </footer>
 
-  <div class="modal" id="successModal" aria-hidden="true" role="dialog" aria-labelledby="successTitle">
-    <div class="modal-panel">
-      <button class="modal-close" id="modalClose" type="button" aria-label="Tutup">×</button>
-      <span class="modal-icon">✓</span>
-      <h2 id="successTitle">Pendaftaran berhasil dikirim.</h2>
-      <p>Data peserta sudah masuk ke sistem host. Bukti pembayaran serta bukti follow dan share juga tersimpan di Google Drive admin. Tim COBAIN.ID dapat menghubungimu melalui WhatsApp atau email aktif.</p>
-      <a class="btn btn-wa full" id="joinWaGroup" href="https://chat.whatsapp.com/Dd8WnoPkleXHHYXqxMT5Wx" target="_blank" rel="noopener">Masuk Grup WhatsApp Peserta</a>
-      <button class="btn btn-primary full" id="modalOk" type="button">Mengerti</button>
+  <div class="modal qris-modal" id="qrisModal" aria-hidden="true" role="dialog" aria-labelledby="qrisTitle">
+    <div class="modal-panel qris-panel">
+      <button class="modal-close" id="qrisModalClose" type="button" aria-label="Tutup">×</button>
+      <span class="modal-icon qris-icon">QR</span>
+      <h2 id="qrisTitle">Scan QRIS Pembayaran</h2>
+      <p id="qrisProgram" class="qris-program">Cobain Cup</p>
+      <p id="qrisNominal" class="qris-nominal">Scan sebesar Rp 5.000.</p>
+      <div class="qris-image-frame">
+        <img src="assets/qris-cobain.jpeg" alt="QRIS COBAIN.ID" />
+      </div>
+      <a class="btn btn-orange full" id="qrisLink" href="https://app.e-ujian.com/cobainId/pendaftaran/106" target="_blank" rel="noopener">
+        Lanjut ke Link Pendaftaran
+      </a>
+      <button class="btn btn-primary full" id="qrisModalOk" type="button">Tutup</button>
     </div>
   </div>
 
