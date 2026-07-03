@@ -288,7 +288,7 @@ function chooseProgram(event) {
 
   modal.classList.add("show");
   modal.setAttribute("aria-hidden", "false");
-  showToast(`QRIS ${program} dibuka.`);
+  //showToast(`QRIS ${program} dibuka.`);
 }
 
 function closeQrisModal() {
